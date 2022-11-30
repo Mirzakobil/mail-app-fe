@@ -2,11 +2,11 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React from 'react';
 import Form from 'react-bootstrap/Form';
-import { Container, Col, Row } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
-
 import { useEffect, useState } from 'react';
+import { Stack, Autocomplete, TextField } from '@mui/material';
 
 function sendMessage() {
   const apiLink2 = 'https://user-dashboard-api.onrender.com';
@@ -15,6 +15,19 @@ function sendMessage() {
   const [title, setTitle] = useState('');
   const [messageBody, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [allmails, setAllMails] = useState([]);
+  const unsortedNames = [''];
+
+  useEffect(() => {
+    fetch(`${apiLink1}/api/getMessages/`)
+      .then((response) => response.json())
+      .then((json) => setAllMails(json));
+  }, []);
+  allmails.map((e) => {
+    unsortedNames.push(e.sender);
+    unsortedNames.push(e.recipient);
+  });
+  const names = [...new Set(unsortedNames)];
 
   const handleSubmit = (e) => {
     const name = localStorage.getItem('name');
@@ -28,7 +41,7 @@ function sendMessage() {
       },
     };
     axios(configuration)
-      .then((result) => {
+      .then(() => {
         setRecepiet('');
         setTitle('');
         setMessage('');
@@ -45,15 +58,18 @@ function sendMessage() {
       <Container className="mt-3">
         <h2>Send Message:</h2>
         <Form>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-            <Form.Control
-              name="recepiet"
+          <Stack className="mb-3" spacing={2} width="100%">
+            <Autocomplete
+              options={names}
+              renderInput={(params) => (
+                <TextField {...params} label="Recipient" />
+              )}
               value={recipient}
-              onChange={(e) => setRecepiet(e.target.value)}
-              type="text"
-              placeholder="Recepiet"
+              onChange={(e, data) => setRecepiet(data)}
+              autoSelect
+              freeSolo
             />
-          </Form.Group>
+          </Stack>
           <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
             <Form.Control
               name="title"

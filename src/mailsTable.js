@@ -1,7 +1,7 @@
 /* eslint-disable no-implied-eval */
 /* eslint-disable react-hooks/rules-of-hooks */
 import React from 'react';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 
 import { Container } from 'react-bootstrap';
@@ -13,6 +13,7 @@ function mailsTable() {
   const [mails, setMails] = useState([]);
   const [checked, setChecked] = useState([]);
   const [pageSize, setPageSize] = useState(7);
+
   const columns = [
     { field: 'sender', headerName: 'Sender', width: 110 },
     { field: 'title', headerName: 'Title', width: 150 },
@@ -20,11 +21,13 @@ function mailsTable() {
     { field: 'sentTime', headerName: 'Sent Time', width: 200 },
   ];
 
-  useEffect(() => {
+  setInterval(() => {
     fetch(`${apiLink1}/api/getMessages/${currentUser}`)
       .then((response) => response.json())
-      .then((json) => setMails(json));
-  }, []);
+      .then((json) => {
+        setMails(json);
+      });
+  }, 8000);
   return (
     <>
       <Container>
