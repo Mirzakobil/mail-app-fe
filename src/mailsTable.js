@@ -20,23 +20,15 @@ function mailsTable() {
     { field: 'messageBody', headerName: 'Message', width: 654 },
     { field: 'sentTime', headerName: 'Sent Time', width: 200 },
   ];
-  // const data = useEffect(() => {
-  //   fetch(`${apiLink1}/api/getMessages/${currentUser}`)
-  //     .then((response) => response.json())
-  //     .then((json) => {
-  //       setMails(json);
-  //     });
-  // }, []);
-  // setInterval(() => {
-  //   data()();
-  // }, 8000);
-  setInterval(() => {
-    fetch(`${apiLink1}/api/getMessages/${currentUser}`)
-      .then((response) => response.json())
-      .then((json) => {
-        setMails(json);
-      });
-  }, 8000);
+  useEffect(() => {
+    setInterval(() => {
+      fetch(`${apiLink1}/api/getMessages/${currentUser}`)
+        .then((response) => response.json())
+        .then((json) => {
+          setMails(json);
+        });
+    }, 5000);
+  }, []);
   return (
     <>
       <Container>
