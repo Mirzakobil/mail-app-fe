@@ -7,8 +7,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Container } from 'react-bootstrap';
 
 function mailsTable() {
-  const apiLink2 = 'https://user-dashboard-api.onrender.com';
-  const apiLink1 = 'http://localhost:4000';
+  const apiLink1 = 'https://mail-app-api.onrender.com';
+  const apiLink2 = 'http://localhost:4000';
   const currentUser = localStorage.getItem('name');
   const [mails, setMails] = useState([]);
   const [checked, setChecked] = useState([]);
@@ -20,7 +20,16 @@ function mailsTable() {
     { field: 'messageBody', headerName: 'Message', width: 654 },
     { field: 'sentTime', headerName: 'Sent Time', width: 200 },
   ];
-
+  // const data = useEffect(() => {
+  //   fetch(`${apiLink1}/api/getMessages/${currentUser}`)
+  //     .then((response) => response.json())
+  //     .then((json) => {
+  //       setMails(json);
+  //     });
+  // }, []);
+  // setInterval(() => {
+  //   data()();
+  // }, 8000);
   setInterval(() => {
     fetch(`${apiLink1}/api/getMessages/${currentUser}`)
       .then((response) => response.json())
