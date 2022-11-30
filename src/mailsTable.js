@@ -3,7 +3,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-
+import Offcanvas from 'react-bootstrap/Offcanvas';
 import { Container } from 'react-bootstrap';
 
 function mailsTable() {
@@ -11,15 +11,20 @@ function mailsTable() {
   const apiLink2 = 'http://localhost:4000';
   const currentUser = localStorage.getItem('name');
   const [mails, setMails] = useState([]);
-  const [checked, setChecked] = useState([]);
+  const [messageBody, setMessageBody] = useState([]);
   const [pageSize, setPageSize] = useState(7);
 
   const columns = [
-    { field: 'sender', headerName: 'Sender', width: 110 },
-    { field: 'title', headerName: 'Title', width: 150 },
-    { field: 'messageBody', headerName: 'Message', width: 654 },
+    { field: 'sender', headerName: 'Sender', width: 150 },
+    { field: 'title', headerName: 'Title', width: 180 },
+    { field: 'messageBody', headerName: 'Message', width: 560 },
     { field: 'sentTime', headerName: 'Sent Time', width: 200 },
   ];
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   useEffect(() => {
     setInterval(() => {
       fetch(`${apiLink1}/api/getMessages/${currentUser}`)
@@ -29,6 +34,14 @@ function mailsTable() {
         });
     }, 5000);
   }, []);
+
+  const handleRowSelection = (id) => {
+    mails.map((e) => {
+      if (e._id === id[0]) {
+        setMessageBody(e);
+      }
+    });
+  };
   return (
     <>
       <Container>
@@ -42,9 +55,23 @@ function mailsTable() {
             onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
             pagination
             rowsPerPageOptions={[7, 10, 20]}
-            onSelectionModelChange={(params) => setChecked(params)}
+            onSelectionModelChange={(params) => {
+              handleRowSelection(params);
+              handleShow();
+            }}
           />
         </div>
+        <Offcanvas show={show} onHide={handleClose}>
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title>
+              <h1>{messageBody.title}</h1>
+            </Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body>
+            <h4>{messageBody.sender}</h4>
+            <div>{messageBody.messageBody}</div>
+          </Offcanvas.Body>
+        </Offcanvas>
       </Container>
     </>
   );
