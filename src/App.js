@@ -8,6 +8,8 @@ import Main from './main';
 import Name from './name';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
+import PrivateRoute from './protected';
+
 function App() {
   const name = localStorage.getItem('name');
 
@@ -41,8 +43,11 @@ function App() {
       </Navbar>
       <Container>
         <Routes>
+          <Route element={<PrivateRoute />}>
+            <Route exact path="/main" element={<Main />} />
+          </Route>
           <Route exact path="/" element={<Name />} />
-          <Route exact path="/main" element={<Main />} />
+          {/* <Route exact path="/main" element={<Main />} /> */}
         </Routes>
       </Container>
     </>
